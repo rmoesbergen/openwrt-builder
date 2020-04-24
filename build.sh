@@ -3,6 +3,10 @@
 
 EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-requests"
 
+if [[ ! -d ./buildroot ]]; then
+  mkdir ./buildroot
+fi
+
 echo "Updating/fetching OpenWRT sources..."
 if [[ ! -d ./buildroot/openwrt ]]; then
   # Get fresh git repo
