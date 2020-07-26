@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 
-EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-requests libustream-openssl nano"
+EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-requests libustream-openssl nano avahi-daemon"
 
 if [[ ! -d ./buildroot ]]; then
   mkdir ./buildroot
