@@ -1,11 +1,23 @@
 #!/bin/bash
 #
 
-EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-requests libustream-openssl nano avahi-daemon"
+EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-requests libustream-openssl nano avahi-daemon tcpdump"
 
 if [[ ! -d ./buildroot ]]; then
   mkdir ./buildroot
 fi
+
+if [[ ! -f ./buildroot/openwrt/.config ]]; then
+  echo "Copying configuration"
+  cp config ./buildroot/openwrt/.config
+  docker-compose run --rm -w /home/builder/openwrt builder make defconfig
+else
+  docker-compose run --rm -w /home/builder/openwrt builder make oldconfig
+fi
+
+# Clean up first
+echo "Cleaning up sources..."
+docker-compose run --rm -w /home/builder/openwrt builder make clean
 
 echo "Updating/fetching OpenWRT sources..."
 if [[ ! -d ./buildroot/openwrt ]]; then
@@ -22,16 +34,8 @@ docker-compose run --rm -w /home/builder/openwrt builder "scripts/feeds" "update
 echo "Installing extra packages..."
 docker-compose run --rm -w /home/builder/openwrt builder "scripts/feeds" "install" ${EXTRA_PACKAGES}
 
-if [[ ! -f ./buildroot/openwrt/.config ]]; then
-  echo "Copying configuration"
-  cp config ./buildroot/openwrt/.config
-  docker-compose run --rm -w /home/builder/openwrt builder make defconfig
-else
-  docker-compose run --rm -w /home/builder/openwrt builder make oldconfig
-fi
-
 echo "Building custom OpenWRT image..."
-docker-compose run --rm -w /home/builder/openwrt builder make download
+docker-compose run --rm -w /home/builder/openwrt builder make -j2 download
 docker-compose run --rm -w /home/builder/openwrt builder make -j6 world
 
 echo "Done!"
