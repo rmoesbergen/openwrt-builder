@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 
-EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-requests libustream-openssl nano avahi-daemon tcpdump kmod-jool jool-tools"
+EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-requests libustream-openssl nano avahi-daemon tcpdump kmod-jool jool-tools smcroute"
 
 if [[ ! -d ./buildroot ]]; then
   mkdir ./buildroot
