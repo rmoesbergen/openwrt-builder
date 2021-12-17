@@ -1,6 +1,12 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -yy update && \
-    apt-get -yy install subversion build-essential libncurses5-dev zlib1g-dev gawk git ccache gettext libssl-dev xsltproc zip wget file python3 rsync nano
+    apt-get -yy install build-essential ccache ecj fastjar file g++ gawk \
+gettext git java-propose-classpath libelf-dev libncurses5-dev \
+libncursesw5-dev libssl-dev python python2.7-dev python3 unzip wget \
+python3-distutils python3-setuptools python3-dev rsync subversion \
+swig time xsltproc zlib1g-dev
+
 RUN groupadd -r builder -g 1000 && useradd --no-log-init -m -u 1000 -r -g builder builder
 USER builder
 WORKDIR /home/builder

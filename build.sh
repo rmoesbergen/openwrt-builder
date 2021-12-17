@@ -1,16 +1,14 @@
 #!/bin/bash
 #
 
-EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-requests libustream-openssl nano avahi-daemon tcpdump kmod-jool jool-tools smcroute"
+EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-requests libustream-openssl nano avahi-daemon tcpdump smcroute"
 
-if [[ ! -d ./buildroot ]]; then
-  mkdir ./buildroot
-fi
-
+newconfig=0
 if [[ ! -f ./buildroot/openwrt/.config ]]; then
   echo "Copying configuration"
   cp config ./buildroot/openwrt/.config
   docker-compose run --rm -w /home/builder/openwrt builder make defconfig
+  newconfig=1
 else
   docker-compose run --rm -w /home/builder/openwrt builder make oldconfig
 fi
@@ -33,6 +31,13 @@ docker-compose run --rm -w /home/builder/openwrt builder "scripts/feeds" "update
 
 echo "Installing extra packages..."
 docker-compose run --rm -w /home/builder/openwrt builder "scripts/feeds" "install" ${EXTRA_PACKAGES}
+
+if [[ ${newconfig} -eq 1 ]]; then
+  # Re-config after installing new packages
+  echo "Re-copying configuration"
+  cp config ./buildroot/openwrt/.config
+  docker-compose run --rm -w /home/builder/openwrt builder make defconfig
+fi
 
 echo "Building custom OpenWRT image..."
 docker-compose run --rm -w /home/builder/openwrt builder make -j2 download
