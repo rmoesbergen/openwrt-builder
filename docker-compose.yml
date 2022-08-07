@@ -5,3 +5,4 @@ services:
     command: ["sleep", "99d"]
     volumes:
       - ./buildroot:/home/builder
+    network_mode: host
