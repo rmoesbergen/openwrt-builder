@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 
-EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-requests libustream-openssl nano avahi-daemon tcpdump smcroute"
+EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-requests libustream-openssl avahi-daemon tcpdump smcroute nano"
 
 newconfig=0
 if [[ ! -f ./buildroot/openwrt/.config ]]; then
