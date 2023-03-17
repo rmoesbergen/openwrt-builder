@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 
-EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-light python3-urllib python3-idna libustream-openssl avahi-daemon tcpdump nano"
+EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-light python3-urllib python3-openssl python3-idna libustream-openssl avahi-daemon tcpdump nano"
 
 newconfig=0
 if [[ ! -f ./buildroot/openwrt/.config ]]; then
