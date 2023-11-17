@@ -32,15 +32,15 @@ docker compose run --rm -w /home/builder/openwrt builder "scripts/feeds" "update
 echo "Installing extra packages..."
 docker compose run --rm -w /home/builder/openwrt builder "scripts/feeds" "install" ${EXTRA_PACKAGES}
 
-echo "Downloading packages..."
-docker compose run --rm -w /home/builder/openwrt builder make -j2 download
-
 if [[ ${newconfig} -eq 1 ]]; then
   # Re-config after installing new packages
   echo "Re-copying configuration"
   cp config ./buildroot/openwrt/.config
   docker compose run --rm -w /home/builder/openwrt builder make defconfig
 fi
+
+echo "Downloading packages..."
+docker compose run --rm -w /home/builder/openwrt builder make -j2 download
 
 echo "Building custom OpenWRT image..."
 docker compose run --rm -w /home/builder/openwrt builder make -j6 world
