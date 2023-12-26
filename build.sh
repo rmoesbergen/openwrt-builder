@@ -1,17 +1,18 @@
 #!/bin/bash
 #
 
-EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-light python3-urllib python3-openssl python3-idna libustream-openssl avahi-daemon tcpdump nano htop"
-
-newconfig=0
-if [[ ! -f ./buildroot/openwrt/.config ]]; then
-  echo "Copying configuration"
+function reconfig() {
+  # Re-config after installing new packages
+  echo "Re-copying configuration"
   cp config ./buildroot/openwrt/.config
   docker compose run --rm -w /home/builder/openwrt builder make defconfig
-  newconfig=1
-else
-  docker compose run --rm -w /home/builder/openwrt builder make oldconfig
-fi
+}
+
+EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-light python3-urllib python3-openssl python3-idna libustream-openssl avahi-daemon tcpdump nano htop"
+
+echo "Copying configuration"
+cp config ./buildroot/openwrt/.config
+docker compose run --rm -w /home/builder/openwrt builder make defconfig
 
 # Clean up first
 echo "Cleaning up sources..."
@@ -26,18 +27,17 @@ else
   docker compose run --rm -w /home/builder/openwrt builder git pull
 fi
 
+reconfig
+
 echo "Updating package feeds..."
 docker compose run --rm -w /home/builder/openwrt builder "scripts/feeds" "update" "-a"
+
+reconfig
 
 echo "Installing extra packages..."
 docker compose run --rm -w /home/builder/openwrt builder "scripts/feeds" "install" ${EXTRA_PACKAGES}
 
-if [[ ${newconfig} -eq 1 ]]; then
-  # Re-config after installing new packages
-  echo "Re-copying configuration"
-  cp config ./buildroot/openwrt/.config
-  docker compose run --rm -w /home/builder/openwrt builder make defconfig
-fi
+reconfig
 
 echo "Downloading packages..."
 docker compose run --rm -w /home/builder/openwrt builder make -j2 download
