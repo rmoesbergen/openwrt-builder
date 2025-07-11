@@ -36,6 +36,7 @@ CONFIG_PACKAGE_dbus=y
 CONFIG_PACKAGE_dmesg=y
 # CONFIG_PACKAGE_dnsmasq is not set
 CONFIG_PACKAGE_dnsmasq-dhcpv6=y
+CONFIG_PACKAGE_ethtool=y
 CONFIG_PACKAGE_gawk=y
 CONFIG_PACKAGE_hostapd-openssl=y
 CONFIG_PACKAGE_htop=y
@@ -137,9 +138,4 @@ CONFIG_PACKAGE_unbound-daemon=y
 # CONFIG_PACKAGE_wpad-basic-mbedtls is not set
 # CONFIG_WOLFSSL_HAS_OPENVPN is not set
 # CONFIG_WOLFSSL_HAS_TLSV10 is not set
-# CONFIG_PACKAGE_apk-mbedtls is not set
-CONFIG_PACKAGE_apk-openssl=y
-# CONFIG_PACKAGE_ip6tables-nft is not set
-# CONFIG_PACKAGE_libmbedtls is not set
-# CONFIG_PACKAGE_xtables-nft is not set
-# CONFIG_WOLFSSL_HAS_TLSV10 is not set
+CONFIG_PACKAGE_ethtool=y

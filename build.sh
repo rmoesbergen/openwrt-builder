@@ -8,7 +8,7 @@ function reconfig() {
   docker compose run --rm -w /home/builder/openwrt builder make defconfig
 }
 
-EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-light python3-urllib python3-openssl python3-idna libustream-openssl avahi-daemon tcpdump nano htop"
+EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock python3-light python3-urllib python3-openssl python3-idna libustream-openssl avahi-daemon tcpdump nano htop ethtool"
 
 reconfig
 
@@ -39,7 +39,7 @@ docker compose run --rm -w /home/builder/openwrt builder make -j2 download
 reconfig
 
 echo "Building custom OpenWRT image..."
-docker compose run --rm -w /home/builder/openwrt builder make -j6 clean world
+docker compose run --rm -w /home/builder/openwrt builder make -j8 clean world
 
 echo "Done!"
 echo "Image file(s):"
