@@ -10,11 +10,11 @@ function reconfig() {
 
 EXTRA_PACKAGES="luci luci-app-unbound luci-app-adblock luci-proto-wireguard python3-light python3-paho-mqtt libustream-openssl avahi-daemon tcpdump nano htop ethtool iputils-arping"
 
-reconfig
-
 # Clean up first
 echo "Cleaning up sources..."
-docker compose run --rm -w /home/builder/openwrt builder make clean
+docker compose run --rm -w /home/builder/openwrt builder make dirclean
+
+cp config ./buildroot/openwrt/.config
 
 echo "Updating/fetching OpenWRT sources..."
 if [[ ! -d ./buildroot/openwrt ]]; then
@@ -27,21 +27,15 @@ fi
 
 echo "Updating package feeds..."
 docker compose run --rm -w /home/builder/openwrt builder "scripts/feeds" "update" "-a"
+docker compose run --rm -w /home/builder/openwrt builder "scripts/feeds" "install" "-a"
 
 echo "Installing extra packages..."
 docker compose run --rm -w /home/builder/openwrt builder "scripts/feeds" "install" ${EXTRA_PACKAGES}
 
-# exit 0
-
 reconfig
 
-echo "Downloading packages..."
-docker compose run --rm -w /home/builder/openwrt builder make -j2 download
-
-reconfig
-
-echo "Building custom OpenWRT image..."
-docker compose run --rm -w /home/builder/openwrt builder make -j8 clean world
+echo "Building world..."
+docker compose run --rm -w /home/builder/openwrt builder make -j2 download clean world
 
 echo "Done!"
 echo "Image file(s):"
